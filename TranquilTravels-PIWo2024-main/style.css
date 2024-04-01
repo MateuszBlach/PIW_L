@@ -191,6 +191,11 @@ body{
     padding: 1rem;
 }
 
+.card-labels  {
+    display: flex;
+    justify-content: space-between;
+}
+
 .hero-cards>.card-image:nth-child(1){
     background-image: url(./Assets/heroSmall1.jpeg);
 }
