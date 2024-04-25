@@ -1,33 +1,48 @@
-function addTask() {
-    var taskInput = document.getElementById("taskInput");
-    var taskText = taskInput.value.trim();
-    if (taskText !== "") {
-        var listItem = document.createElement("li");
-        listItem.textContent = taskText;
-        listItem.addEventListener("click", toggleTask);
-        document.getElementById("taskList").appendChild(listItem);
-        taskInput.value = "";
-    } else {
-        alert("Wpisz treść zadania!");
-    }
-}
+"use strict";
 
-function toggleTask() {
-    var date = new Date().toLocaleString();
-    if (this.classList.contains("completed")) {
-        this.classList.remove("completed");
-        this.style.textDecoration = "";
-        this.dataset.date = "";
-    } else {
-        this.classList.add("completed");
-        this.style.textDecoration = "line-through";
-        this.dataset.date = date;
-    }
-}
+const addTask = () => {
+    const taskInput = document.getElementById("task");
 
-window.onload = function() {
-    var taskItems = document.querySelectorAll("#taskList li");
-    taskItems.forEach(function(item) {
-        item.addEventListener("click", toggleTask);
+    if (taskInput.value.trim() === "") {
+        const modal = document.querySelector("dialog");
+        modal.showModal();
+        return;
+    }
+
+    const listItem = document.createElement("li");
+    listItem.textContent = taskInput.value;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "X";
+    deleteButton.onclick = function () {
+        this.parentNode.remove();
+    };
+
+    listItem.appendChild(deleteButton);
+    document.getElementById("unordered-list").appendChild(listItem);
+
+    taskInput.value = "";
+
+    listItem.addEventListener("click", () => {
+        if (!listItem.classList.contains("completed")) {
+            const date = new Date().toLocaleString();
+            const dateText = document.createElement("span");
+            dateText.textContent = ` - Completed: ${date}`;
+            listItem.appendChild(dateText);
+        } else {
+            const dateText = listItem.querySelector("span");
+            if (dateText) {
+                listItem.removeChild(dateText);
+            }
+        }
+        listItem.classList.toggle("completed");
+    });
+};
+
+window.onload = () => {
+    const closeButton = document.getElementById("closing");
+    closeButton.addEventListener("click", () => {
+        const modal = document.querySelector("dialog");
+        modal.close();
     });
 };
