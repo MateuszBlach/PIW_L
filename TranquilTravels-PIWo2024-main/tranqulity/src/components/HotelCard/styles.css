@@ -1,0 +1,12 @@
+.hotel-card {
+  background-color: var(--white);
+  border-radius: var(--radius-medium);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+}
+.button-detail {
+  width: 100%;
+  text-decoration: none;
+}
