@@ -1,13 +1,37 @@
 // HotelPage.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import hotelsData from './hotelsData';
-import "./hotelPage.css"
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from './firebase'; // Ensure you have the firebase configuration here
+import "./hotelPage.css";
 
 function HotelPage() {
   const { id } = useParams();
-  const hotel = hotelsData.find(hotel => hotel.id === parseInt(id));
-  console.log(hotel);
+  const [hotel, setHotel] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHotel = async () => {
+      try {
+        const docRef = doc(db, 'hotels', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setHotel({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching hotel:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHotel();
+  }, [id]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   if (!hotel) {
     return <p>Hotel not found</p>;

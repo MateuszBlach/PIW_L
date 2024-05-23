@@ -1,15 +1,24 @@
-// App.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './style.css';
 import arrow from "./Assets/Arrow.svg";
 import logo from "./Assets/logo.svg";
-
-// Components
 import HotelPage from './HotelPage';
 import Home from './Home';
+import GoogleLoginComponent from './GoogleLoginComponent';
+import fetchHotelsData from './fetchHotelsData'; // Import the fetch function
 
 function App() {
+  const [hotels, setHotels] = useState([]);
+
+  useEffect(() => {
+    const getHotelsData = async () => {
+      const data = await fetchHotelsData();
+      setHotels(data);
+    };
+    getHotelsData();
+  }, []);
+
   return (
     <Router>
       <div>
@@ -21,14 +30,14 @@ function App() {
             <li><a className="nav-link" href="#browse">Browse</a></li>
             <li><a className="nav-link" href="#rent">Rent with us</a></li>
             <li><a className="nav-link" href="#">Sign up</a></li>
-            <button className="button primary">Log in</button>
+            <GoogleLoginComponent />
           </ul>
           <button className="button primary hidden">Menu</button>
         </nav>
 
         {/* Main content */}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home hotels={hotels} />} />
           <Route path="/hotel/:id" element={<HotelPage />} />
         </Routes>
 
