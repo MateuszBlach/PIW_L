@@ -1,14 +1,15 @@
-// HotelPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './firebase'; // Ensure you have the firebase configuration here
+import { BasketContext } from './BasketContext'; // Import BasketContext
 import "./hotelPage.css";
 
 function HotelPage() {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { addToBasket, basket } = useContext(BasketContext); // Use BasketContext
 
   useEffect(() => {
     const fetchHotel = async () => {
@@ -37,6 +38,11 @@ function HotelPage() {
     return <p>Hotel not found</p>;
   }
 
+  const handleEmailClick = () => {
+    const mailtoLink = `mailto:${hotel.email}?subject=Inquiry about ${hotel.name}&body=Hello, I would like to know more about your hotel.`;
+    window.location.href = mailtoLink;
+  };
+
   return (
     <section className="grid card-detail">
       <div className="detail-view">
@@ -63,6 +69,12 @@ function HotelPage() {
             </h4>
             <p>{hotel.description}</p>
           </div>
+          <button className="button primary" onClick={() => addToBasket(hotel)}>
+            Add to Basket
+          </button>
+          <button className="button secondary" onClick={handleEmailClick}>
+            Contact Hotel
+          </button>
         </div>
       </div>
     </section>

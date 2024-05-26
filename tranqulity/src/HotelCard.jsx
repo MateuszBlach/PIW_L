@@ -1,11 +1,10 @@
-// HotelCard.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import arrow from "./Assets/Arrow.svg"; // Import the arrow image
+import arrow from "./Assets/Arrow.svg";
+import { BasketContext } from './BasketContext'; // Import BasketContext
 
 function HotelCard({ hotel }) {
-  console.log(hotel);
-  
+  const { addToBasket } = useContext(BasketContext); // Use BasketContext
 
   return (
     <article className="hotel-card">
@@ -29,6 +28,9 @@ function HotelCard({ hotel }) {
           View offer <img src={arrow} alt="Arrow" />
         </button>
       </Link>
+      <button className="button secondary" onClick={() => addToBasket(hotel)}>
+        Add to Basket
+      </button>
     </article>
   );
 }
